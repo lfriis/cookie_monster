@@ -10,13 +10,19 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+enum UserType {
+    ADMIN
+    USER
 }
 
-// Necessary for Next auth
+enum OrderStatus {
+  SUBMITTED
+  REVIEWED
+  INPROGRESS
+  COMPLETED
+}
+
+// Next Auth
 model Account {
     id                String  @id @default(cuid())
     userId            String
@@ -49,8 +55,10 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    phoneNumber   String?
     accounts      Account[]
     sessions      Session[]
+    orders        Order[]
 }
 
 model VerificationToken {
@@ -59,4 +67,16 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Order {
+    id            String      @id @default(cuid())
+    status        OrderStatus @default(SUBMITTED)
+    quantity      Int
+    description   String
+    orderDate     DateTime
+    requestedDate DateTime
+    pickupDate    DateTime?
+    userId        String
+    user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
