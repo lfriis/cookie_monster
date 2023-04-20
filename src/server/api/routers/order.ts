@@ -14,21 +14,40 @@ export const orderRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
       z.object({
+        title: z.string(),
         quantity: z.number(),
         description: z.string(),
-        requestedDate: z.date(),
+        requestedPickupDate: z.string(),
       })
     )
     .mutation(({ ctx, input }) => {
       return ctx.prisma.order.create({
         data: {
           quantity: input.quantity,
+          title: input.title,
           description: input.description,
-          orderDate: input.requestedDate,
-          userId: ctx.session.user.id,
-          requestedDate: new Date(),
+          requestedPickupDate: new Date(input.requestedPickupDate),
+          orderDate: new Date(),
           pickupDate: new Date(),
+          userId: ctx.session.user.id,
         },
       });
     }),
+
+  // cancel: protectedProcedure
+  // .input(
+  //   z.object({
+  //     orderId: z.string(),
+  //   })
+  // )
+  // .mutation(({ input, ctx }) => {
+  //   return ctx.prisma.order.update({
+  //     data: {
+  //       status: 'CANCELLED',
+  //     },
+  //     where: {
+  //       id: input.orderId
+  //     }
+  //   });
+  // }),
 });
