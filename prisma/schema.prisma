@@ -20,6 +20,7 @@ enum OrderStatus {
   REVIEWED
   INPROGRESS
   COMPLETED
+  CANCELLED
 }
 
 // Next Auth
@@ -70,13 +71,14 @@ model VerificationToken {
 }
 
 model Order {
-    id            String      @id @default(cuid())
-    status        OrderStatus @default(SUBMITTED)
-    quantity      Int
-    description   String
-    orderDate     DateTime
-    requestedDate DateTime
-    pickupDate    DateTime?
-    userId        String
-    user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id                  String      @id @default(cuid())
+    status              OrderStatus @default(SUBMITTED)
+    quantity            Int
+    title               String
+    description         String
+    requestedPickupDate DateTime
+    orderDate           DateTime?
+    pickupDate          DateTime?
+    userId              String
+    user                User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
