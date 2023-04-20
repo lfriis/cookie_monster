@@ -43,12 +43,10 @@ export const Login: React.FC = () => {
             <div className="form-control mt-6">
               <button className="btn-primary btn">Login</button>
             </div>
-            <div className="mt-4 flex justify-center">
-              <label>or</label>
-            </div>
+            <div className="divider">OR</div>
             <div className="form-control">
               <h1
-                className="my-5 flex cursor-pointer items-center justify-center gap-2 rounded-full bg-blue-500 p-5	text-center text-white"
+                className=" flex cursor-pointer items-center justify-center gap-2 rounded-full bg-blue-500 p-5	text-center text-white"
                 onClick={() => void signIn("facebook")}
               >
                 <FacebookSVG />
