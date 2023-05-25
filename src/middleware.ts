@@ -8,9 +8,12 @@ export function middleware(req: NextRequest) {
   // Redirecting unauthenticated users to login page
   if (!isAuthenticated && !originLogin)
     return NextResponse.redirect(`${req.nextUrl.origin}/login`);
+
+  if (isAuthenticated && originLogin)
+    return NextResponse.redirect(`${req.nextUrl.origin}/`);
 }
 
 // Middleware running on defined paths
 export const config = {
-  matcher: ["/", "/orders"],
+  matcher: ["/", "/login", "/orders"],
 };

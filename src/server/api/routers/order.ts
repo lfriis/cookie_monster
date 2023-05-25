@@ -11,6 +11,21 @@ export const orderRouter = createTRPCRouter({
     });
   }),
 
+  getOrder: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(({ input, ctx }) => {
+      return ctx.prisma.order.findMany({
+        where: {
+          id: input.id,
+          userId: ctx.session.user.id,
+        },
+      });
+    }),
+
   create: protectedProcedure
     .input(
       z.object({
@@ -30,6 +45,27 @@ export const orderRouter = createTRPCRouter({
           orderDate: new Date(),
           pickupDate: new Date(),
           userId: ctx.session.user.id,
+        },
+      });
+    }),
+
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string().optional(),
+        description: z.string().optional(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.order.update({
+        data: {
+          title: input.title,
+          description: input.description,
+          userId: ctx.session.user.id,
+        },
+        where: {
+          id: input.id,
         },
       });
     }),

@@ -1,12 +1,25 @@
 import Head from "next/head";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { FacebookSVG } from "~/assets";
+import { useState } from "react";
+
+type LoginMethod = "login" | "facebook";
 
 export const Login: React.FC = () => {
+  const { status } = useSession();
+  const [selectedLoginMethod, setSelectedLoginMethod] =
+    useState<null | LoginMethod>(null);
+  const loading = status === "loading";
+
+  function isLoginMethod(method: LoginMethod): string {
+    if (loading && method === selectedLoginMethod) return "loading";
+    return "";
+  }
+
   return (
     <>
       <Head>
-        <title>Crumbs {">"} Login</title>
+        <title>Sign in to Crumbs</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
@@ -30,6 +43,7 @@ export const Login: React.FC = () => {
                     type="text"
                     placeholder="email"
                     className="input-bordered input"
+                    disabled={loading}
                   />
                 </div>
                 <div className="form-control">
@@ -40,6 +54,7 @@ export const Login: React.FC = () => {
                     type="text"
                     placeholder="password"
                     className="input-bordered input"
+                    disabled={loading}
                   />
                   <label className="label">
                     <a href="#" className="link-hover label-text-alt link">
@@ -48,16 +63,33 @@ export const Login: React.FC = () => {
                   </label>
                 </div>
                 <div className="form-control mt-6">
-                  <button className="btn-primary btn">Login</button>
+                  <button
+                    className={`btn-primary btn ${isLoginMethod("login")}
+                    `}
+                    disabled={loading}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setSelectedLoginMethod("login");
+                    }}
+                  >
+                    Login
+                  </button>
                 </div>
                 <div className="divider">OR</div>
                 <div className="form-control">
                   <h1
-                    className=" flex cursor-pointer items-center justify-center gap-2 rounded-full bg-blue-500 p-5	text-center text-white"
-                    onClick={() => void signIn("facebook")}
+                    className={`btn flex cursor-pointer items-center justify-center gap-2 rounded-full bg-blue-500	text-center text-white ${isLoginMethod(
+                      "facebook"
+                    )}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setSelectedLoginMethod("facebook");
+                      void signIn("facebook");
+                    }}
+                    // disabled={loading}
                   >
                     <FacebookSVG />
-                    <label>Login with Facebook</label>
+                    Login with Facebook
                   </h1>
                 </div>
               </div>

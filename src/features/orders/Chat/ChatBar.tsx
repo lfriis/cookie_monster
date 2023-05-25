@@ -5,6 +5,9 @@ export const ChatBar: React.FC = () => {
         className="input-bordered input-primary input w-full"
         type="text"
         placeholder="Message Crumbs"
+        onChange={(e) => {
+          console.log(e.target.value);
+        }}
       />
       <button className="btn">Send</button>
     </div>
